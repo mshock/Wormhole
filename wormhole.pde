@@ -3,7 +3,7 @@ Ship ship;
 void setup() {
   size(800, 800);
   frameRate(35);
-  ship = new Ship();
+  ship = new Ship(255,.1,10,2,.85,width/2,height/2);
 }
 
 void draw() {

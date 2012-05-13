@@ -2,35 +2,35 @@ class Ship {
    color c;
    float xpos;
    float ypos;
-   float xspeed;
-   float yspeed;
-   float xaccel;
-   float yaccel;
+   float xspeed = 0;
+   float yspeed = 0;
+   float xaccel = 0;
+   float yaccel = 0;
    
    boolean[] boostDir = new boolean[4];
    
-   float ship_accel = .1;
+   float ship_accel;
    
-   float max_speed = 10;
-   float max_accel = 2;
+   float max_speed;
+   float max_accel;
    
-   float accel_decay = .90;
-   float drag_coef = .001;
+   float accel_decay;
    
-   Ship() {
-     c = color(255);
-     xpos = width/2;
-     ypos = height/2;
-     xspeed = 0;
-     yspeed = 0;
-     yaccel = 0;
-     xaccel = 0;
+   Ship(color c, float ship_accel, float max_speed, float max_accel, float accel_decay, float xpos, float ypos) {
+     this.c = c;
+     this.ship_accel = ship_accel;
+     this.max_speed = max_speed;
+     this.max_accel = max_accel;
+     this.accel_decay = accel_decay;
+     this.xpos = xpos;
+     this.ypos = ypos;
+     
    }
    
    void display() {
      rectMode(CENTER);
      fill(c);
-     rect(xpos,ypos,20,10);
+     rect(xpos,ypos,10,10);
    }
    
    void boost(int direction, boolean active) {
