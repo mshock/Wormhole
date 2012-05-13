@@ -1,44 +1,26 @@
-class Ship {
-   color c;
-   float xpos;
-   float ypos;
-   float xspeed = 0;
-   float yspeed = 0;
-   float xaccel = 0;
-   float yaccel = 0;
+// class representing user-controlled ship
+class Ship extends Object {
+  
+   private boolean[] boostDir = new boolean[4];
+   private float ship_accel;
+   private float max_speed;
+   private float max_accel;
+   private float accel_decay;
    
-   boolean[] boostDir = new boolean[4];
-   
-   float ship_accel;
-   
-   float max_speed;
-   float max_accel;
-   
-   float accel_decay;
-   
+   // Ship constructor
    Ship(color c, float ship_accel, float max_speed, float max_accel, float accel_decay, float xpos, float ypos) {
-     this.c = c;
+     super(c,xpos,ypos);
+     
      this.ship_accel = ship_accel;
      this.max_speed = max_speed;
      this.max_accel = max_accel;
      this.accel_decay = accel_decay;
-     this.xpos = xpos;
-     this.ypos = ypos;
-     
    }
    
-   void display() {
-     rectMode(CENTER);
-     fill(c);
-     rect(xpos,ypos,10,10);
-   }
-   
-   void boost(int direction, boolean active) {
-     boostDir[direction] = active;
-   }
-   
-   void fly() {
-     
+   // update the object's physics
+   // move its position one step
+   public void update() {
+      
      _update_accel();
      
      _drag();
@@ -47,105 +29,162 @@ class Ship {
      
      _bound();
      
-     // move the ship at speed
-     xpos += xspeed;
-     ypos += yspeed;
+     _move();
      
-     
-     println("xaccel: " + xaccel);
-     println("yaccel: " + yaccel);
-     println("xspeed: " + xspeed);
-     println("yspeed: " + yspeed);
+     println ("xspeed: " + get_xspeed());
+     println ("yspeed: " + get_yspeed());
+     println ("xaccel: " + get_xspeed());
+     println ("yaccel: " + get_yaccel());
      println();
    }
-   
+      
+   // move the ship at speed
+   private void _move() {
+     set_xpos(get_xpos() + get_xspeed());
+     set_ypos(get_ypos() + get_yspeed());
+   }
    
    // handle button press flags by changing accels
-   void _update_accel() {
+   private void _update_accel() {
      float xaccel_inc = 0;
      float yaccel_inc = 0;
+     float ship_accel = get_ship_accel();
+     float max_accel = get_max_accel();
+     float xaccel = get_xaccel();
+     float yaccel = get_yaccel();
      
      // check keys pressed
-     if(boostDir[2]) {
+     if(get_boostDir(2)) {
        xaccel_inc = ship_accel;
      }
-     else if (boostDir[3]) {
+     else if (get_boostDir(3)) {
        xaccel_inc = -ship_accel;  
      }
-     if(boostDir[2] && boostDir[3]) {
+     if(get_boostDir(2) && get_boostDir(3)) {
        xaccel_inc = 0;
      }
-     if(boostDir[1]) {
+     if(get_boostDir(1)) {
        yaccel_inc = ship_accel;
      }
-     else if (boostDir[0]) {
+     else if (get_boostDir(0)) {
        yaccel_inc = -ship_accel;  
      }
-     if(boostDir[0] && boostDir[1]) {
+     if(get_boostDir(0) && get_boostDir(1)) {
        yaccel_inc = 0;
      }
      
         
      if (abs(xaccel + xaccel_inc) <= max_accel) {
-       xaccel += xaccel_inc;
+       set_xaccel(xaccel + xaccel_inc);
      }
      else {
        if (xaccel == abs(xaccel)) {
-         xaccel = max_accel;
+         set_xaccel(max_accel);
        }
        else {
-         xaccel = -max_accel;
+         set_xaccel(-max_accel);
        }
      }
      if (abs(yaccel + yaccel_inc) <= max_accel) {
-       yaccel += yaccel_inc;
+       set_yaccel(yaccel + yaccel_inc);
      }
      else {
        if (yaccel == abs(yaccel)) {
-         yaccel = max_accel;
+         set_yaccel(max_accel);
        }
        else {
-         yaccel = -max_accel;
+         set_yaccel(-max_accel);
        }
      }
    }
    
-   void _update_speed() {
+   private void _update_speed() {
+     float xspeed = get_xspeed();
+     float yspeed = get_yspeed();
+     float max_speed = get_max_speed();
+     
      // set new speeds
      // make sure to bound at max_speed, even if overshot
      if (abs(xspeed) <= max_speed){
-       xspeed += xaccel;
+       set_xspeed(xspeed + get_xaccel());
      }
      else {
-       xspeed = xspeed == abs(xspeed) ? max_speed : -max_speed;
+       set_xspeed( xspeed == abs(xspeed) ? max_speed : -max_speed);
      }
      if (abs(yspeed) <= max_speed) {
-       yspeed += yaccel;
+       set_yspeed(yspeed + get_yaccel());
      }
      else {
-       yspeed = yspeed == abs(yspeed) ? max_speed : -max_speed;
+       set_yspeed( yspeed == abs(yspeed) ? max_speed : -max_speed);
      }
    }
    
    // bounce off of walls (reverse speed and accel direction)
-   void _bound() {
+   private void _bound() {
+     float xpos = get_xpos();
+     float ypos = get_ypos();
+     float xspeed  = get_xspeed();
+     float yspeed = get_yspeed();
+     
      if ((xpos + xspeed >= width) || (xpos + xspeed <= 0)) {
-       xspeed = -xspeed;
-       xaccel = -xaccel;
-       println ("toggled x");  
+       set_xspeed(-xspeed);
+       set_xaccel( -get_xaccel() );
      }
-     if (ypos + yspeed >= height || (ypos + yspeed <= 0)) {
-       yspeed = -yspeed;
-       yaccel = -yaccel;
-       println ("toggled y");
+     if ((ypos + yspeed >= height) || (ypos + yspeed <= 0)) {
+       set_yspeed(-yspeed) ;
+       set_yaccel( -get_yaccel() );
      }
    }
    
    // drag
-   void _drag() {
-     xaccel *= accel_decay;
-     yaccel *= accel_decay;
+   private void _drag() {
+     set_xaccel( get_xaccel() * get_accel_decay() );
+     set_yaccel( get_yaccel() * get_accel_decay() );
+     
     // xaccel = xaccel - xspeed * drag_coef < 0 ? 0 : xaccel - xspeed * drag_coef;
     // yaccel = yaccel - yspeed * drag_coef < 0 ? 0 : yaccel - yspeed * drag_coef;
    }
+   
+   // accessor methods
+   
+   public float get_max_speed() {
+     return max_speed;
+   }   
+   
+   public float set_max_speed(float max_speed) {
+     return this.max_speed = max_speed;
+   }
+   
+   public float get_max_accel() {
+     return max_accel;
+   }
+   
+   public float set_max_accel(float max_accel) {
+     return this.max_accel = max_accel;
+   }
+   
+   public float get_accel_decay() {
+     return accel_decay;
+   }
+   
+   public float set_accel_decay(float accel_decay) {
+     return this.accel_decay = accel_decay;
+   }
+   
+   public float get_ship_accel() {
+     return ship_accel;
+   }
+   
+   public float set_ship_accel(float ship_accel) {
+     return this.ship_accel = ship_accel;
+   }
+   
+   public boolean get_boostDir (int dir) {
+     return boostDir[dir];
+   }
+   
+   public boolean set_boostDir (int dir, boolean active) {
+     return boostDir[dir] = active;
+   }
+   
 }
