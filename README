@@ -8,4 +8,5 @@
 
 
 TODO:
-	- just about everything
+	- ship orientation (for directional weapons)
+	- expand draw area offscreen
