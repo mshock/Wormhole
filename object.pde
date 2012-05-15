@@ -8,11 +8,14 @@ abstract class Object {
   private float xaccel = 0;
   private float yaccel = 0;  
   
+  Object() {
+  }
+  
   // Object constructor, sets common values
   Object(color c, float xpos, float ypos) {
-    this.c = c;
-    this.xpos = xpos;
-    this.ypos = ypos;
+    set_color(c);
+    set_xpos(xpos);
+    set_ypos(ypos);
   }
   
   // display method, called by draw loop on all objects
@@ -23,9 +26,14 @@ abstract class Object {
      _draw_self();
    }
    
+   // override in subclass to customize update routines
+   public boolean update() {
+     return true;
+   }
+   
    // override in subclass to customize appearance
-   private void _draw_self() {
-     rect(xpos,ypos,10,10);
+   public void _draw_self() {
+     rect(get_xpos(),get_ypos(),10,10);
    }
    
    // accessor methods

@@ -7,19 +7,35 @@ class Ship extends Object {
    private float max_accel;
    private float accel_decay;
    
-   // Ship constructor
-   Ship(color c, float ship_accel, float max_speed, float max_accel, float accel_decay, float xpos, float ypos) {
+   private String shiptype;
+   private String weapon;
+   
+
+   // Ship constructor by shiptype 
+   Ship(String shiptype, float xpos, float ypos) {
+     super(255, xpos, ypos);
+     if (shiptype.equals("default")) {
+       set_ship_accel(.1);
+       set_max_speed(10);
+       set_max_accel(2);
+       set_accel_decay(.85);
+       set_weapon("Bullet");
+     }
+   }   
+   
+   // explicit Ship constructor
+   Ship(color c, float ship_accel, float max_speed, float max_accel, float accel_decay, float xpos, float ypos, String weapon) {
      super(c,xpos,ypos);
-     
-     this.ship_accel = ship_accel;
-     this.max_speed = max_speed;
-     this.max_accel = max_accel;
-     this.accel_decay = accel_decay;
+     set_ship_accel(ship_accel);
+     set_max_speed(max_speed);
+     set_max_accel(max_accel);
+     set_accel_decay(accel_decay);
+     set_weapon(weapon);
    }
    
    // update the object's physics
    // move its position one step
-   public void update() {
+   public boolean update() {
       
      _update_accel();
      
@@ -31,11 +47,31 @@ class Ship extends Object {
      
      _move();
      
+     return true;
+     /*
      println ("xspeed: " + get_xspeed());
      println ("yspeed: " + get_yspeed());
      println ("xaccel: " + get_xspeed());
      println ("yaccel: " + get_yaccel());
      println();
+     */
+   }
+   
+   // shoot or unshoot current weapon
+   // return an object of the weapon if fired
+   public Object shoot() {
+     if (get_weapon().equals("Bullet")) {
+         return new Bullet(125, get_xpos(), get_ypos(), get_xspeed() * 1.5, get_yspeed() * 1.5, true, 200);
+     }
+     
+     
+     return new Bullet(155, get_xpos(), get_ypos(), get_xspeed() * 1.5, get_yspeed() * 1.5, true, 200);
+   }
+   
+   public void unshoot() {
+     if (get_weapon().equals("Bullet")) {
+       
+     }
    }
       
    // move the ship at speed
@@ -146,6 +182,14 @@ class Ship extends Object {
    }
    
    // accessor methods
+   
+   public String get_weapon() {
+     return weapon;
+   }
+   
+   public String set_weapon(String weapon) {
+     return this.weapon = weapon;
+   }
    
    public float get_max_speed() {
      return max_speed;
