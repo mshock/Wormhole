@@ -10,3 +10,4 @@
 TODO:
 	- ship orientation (for directional weapons)
 	- expand draw area offscreen
+	- fix jumpy rendering

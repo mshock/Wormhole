@@ -25,8 +25,8 @@ class Bullet extends Projectile {
     return true;
   }
   
-   public void _draw_self() {
-     ellipse(get_xpos(),get_ypos(),7,7);
+   public void _draw_self(PGraphics pg) {
+     pg.ellipse(get_xpos(),get_ypos(),7,7);
    }
   
   // move the bullet

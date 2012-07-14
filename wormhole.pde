@@ -2,6 +2,8 @@
 Wormhole
 */
 
+// graphics buffer
+PGraphics pg;
 
 // player ship
 Ship ship;
@@ -9,15 +11,20 @@ Ship ship;
 ArrayList objects = new ArrayList();
 
 void setup() {
-  size(800, 800);
+  size(800,800, P2D);
+  frameRate(60);
+  pg = createGraphics(800, 800, P2D);
   ship = new Ship("default", width/2, height/2);
 }
 
 void draw() {
-  background(0);
+  pg.beginDraw();
+  pg.background(0);
   ship.update();
-  ship.display();
+  ship.display(pg);
   draw_renderables();
+  pg.endDraw();
+  image(pg,0,0,800,800);
 }
 
 // render all various objects
@@ -28,7 +35,7 @@ void draw_renderables() {
     if (!render_me.update()) {
       objects.remove(i);
     } 
-    render_me.display();
+    render_me.display(pg);
   }
 }
 

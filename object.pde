@@ -18,12 +18,12 @@ abstract class Object {
     set_ypos(ypos);
   }
   
-  // display method, called by draw loop on all objects
+    // display method, called by draw loop on all objects
   // sets up canvas for object to draw itself on
-  public void display() {
-     rectMode(CENTER);
-     fill(c);
-     _draw_self();
+  public void display(PGraphics pg) {
+     pg.rectMode(CENTER);
+     pg.fill(c);
+     _draw_self(pg);
    }
    
    // override in subclass to customize update routines
@@ -32,8 +32,8 @@ abstract class Object {
    }
    
    // override in subclass to customize appearance
-   public void _draw_self() {
-     rect(get_xpos(),get_ypos(),10,10);
+   public void _draw_self(PGraphics pg) {
+     pg.rect(get_xpos(),get_ypos(),10,10);
    }
    
    // accessor methods
