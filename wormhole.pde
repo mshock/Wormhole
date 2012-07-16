@@ -2,6 +2,8 @@
 Wormhole
 */
 
+import processing.opengl.*;
+
 
 // player ship
 Ship ship;
@@ -9,7 +11,7 @@ Ship ship;
 ArrayList objects = new ArrayList();
 
 void setup() {
-  size(800, 800);
+  size(800, 800, OPENGL);
   ship = new Ship("default", width/2, height/2);
 }
 
