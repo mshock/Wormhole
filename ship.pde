@@ -2,31 +2,49 @@
 class Ship extends Object {
   
    private boolean[] boostDir = new boolean[4];
-   private float ship_accel, max_speed, max_accel, accel_decay;
+   private float ship_accel, max_speed, max_accel, accel_decay, orientation;
+   private int shiptype, weapon, shield;
    
-   private String shiptype, weapon;
+   // boost direction constants
+   static final int BOOST_UP = 0;
+   static final int BOOST_DOWN = 1;
+   static final int BOOST_RIGHT = 2;
+   static final int BOOST_LEFT = 3;
+   
+   // weapon and ship type constants
+   static final int WEAP_BULLET = 0;
+   static final int SHIP_BASIC = 0;
+  
+   
    
 
    // Ship constructor by shiptype 
-   Ship(String shiptype, float xpos, float ypos) {
+   Ship(int shiptype, float xpos, float ypos) {
      super(255, xpos, ypos);
-     if (shiptype.equals("default")) {
-       set_ship_accel(.1);
-       set_max_speed(10);
-       set_max_accel(2);
-       set_accel_decay(.85);
-       set_weapon("Bullet");
+     switch(shiptype) {
+       default:
+         set_ship_type(shiptype);
+         set_ship_accel(.1);
+         set_max_speed(10);
+         set_max_accel(2);
+         set_accel_decay(.85);
+         set_weapon(WEAP_BULLET);
+         set_shield(95);
+         break;
      }
+
    }   
    
    // explicit Ship constructor
-   Ship(color c, float ship_accel, float max_speed, float max_accel, float accel_decay, float xpos, float ypos, String weapon) {
+   Ship(int shiptype, color c, float ship_accel, float max_speed, float max_accel, float accel_decay, float xpos, float ypos, int weapon) {
      super(c,xpos,ypos);
+     set_ship_type(shiptype);
      set_ship_accel(ship_accel);
      set_max_speed(max_speed);
      set_max_accel(max_accel);
      set_accel_decay(accel_decay);
      set_weapon(weapon);
+     set_shield(100);
    }
    
    // update the object's physics
@@ -56,20 +74,38 @@ class Ship extends Object {
    // shoot or unshoot current weapon
    // return an object of the weapon if fired
    public Object shoot() {
-     if (get_weapon().equals("Bullet")) {
+     switch (get_weapon()) {
+       default:
          return new Bullet(125, get_xpos(), get_ypos(), get_xspeed() * 1.5, get_yspeed() * 1.5, true, 200);
      }
-     
-     
-     return new Bullet(155, get_xpos(), get_ypos(), get_xspeed() * 1.5, get_yspeed() * 1.5, true, 200);
    }
    
    public void unshoot() {
-     if (get_weapon().equals("Bullet")) {
-       
+     switch (get_weapon()) {
+       default:
+         break;
      }
    }
-      
+    
+    
+   public void _draw_self() {
+     // draw ship hull
+     switch(get_ship_type()) {
+       default:
+         triangle(get_xpos() - 8, get_ypos() + 8,
+           get_xpos(), get_ypos() - 8,
+           get_xpos() + 8, get_ypos() + 8);
+         break;
+     }
+     
+     // draw shield
+     ellipseMode(CENTER);
+     stroke(59,85,255, float(get_shield()) / 100 * 255);
+     fill(0,0,0,0);
+     ellipse(get_xpos(), get_ypos(), 50, 50);
+     
+   }
+     
    // move the ship at speed
    private void _move() {
      set_xpos(get_xpos() + get_xspeed());
@@ -179,11 +215,11 @@ class Ship extends Object {
    
    // accessor methods
    
-   public String get_weapon() {
+   public int get_weapon() {
      return weapon;
    }
    
-   public String set_weapon(String weapon) {
+   public int set_weapon(int weapon) {
      return this.weapon = weapon;
    }
    
@@ -225,6 +261,30 @@ class Ship extends Object {
    
    public boolean set_boostDir (int dir, boolean active) {
      return boostDir[dir] = active;
+   }
+   
+   public int set_ship_type(int shiptype) {
+     return this.shiptype = shiptype;
+   }
+   
+   public int get_ship_type() {
+     return shiptype;
+   }
+   
+   public int get_shield() {
+     return shield;
+   }
+   
+   public int set_shield(int shield) {
+     return this.shield = shield;
+   }
+   
+   public float set_orientation(float orientation) {
+     return this.orientation = orientation;
+   }
+   
+   public float get_orientation() {
+     return orientation;
    }
    
 }

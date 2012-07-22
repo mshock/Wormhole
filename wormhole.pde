@@ -15,7 +15,7 @@ ArrayList objects = new ArrayList();
 void setup() {
   size(800, 800, OPENGL);
   arena = new Arena();
-  ship = new Ship("default", width/2, height/2);
+  ship = new Ship(Ship.SHIP_BASIC, width/2, height/2);
 }
 
 void draw() {
@@ -53,16 +53,16 @@ void keyPressed() {
    switch(keyCode) {
      // directional accel
      case UP:
-       ship.set_boostDir(0, true);
+       ship.set_boostDir(Ship.BOOST_UP, true);
        break;
      case DOWN:
-       ship.set_boostDir(1, true);
+       ship.set_boostDir(Ship.BOOST_DOWN, true);
        break;
      case RIGHT:
-       ship.set_boostDir(2, true);
+       ship.set_boostDir(Ship.BOOST_RIGHT, true);
        break;
      case LEFT:
-       ship.set_boostDir(3, true);
+       ship.set_boostDir(Ship.BOOST_LEFT, true);
        break;
      default:
        return;
@@ -79,16 +79,16 @@ void keyReleased() {
     switch(keyCode) {
       // stop directional accel
        case UP:
-         ship.set_boostDir(0, false);
+         ship.set_boostDir(Ship.BOOST_UP, false);
          break;
        case DOWN:
-         ship.set_boostDir(1, false);
+         ship.set_boostDir(Ship.BOOST_DOWN, false);
          break;
        case RIGHT:
-         ship.set_boostDir(2, false);
+         ship.set_boostDir(Ship.BOOST_RIGHT, false);
          break;
        case LEFT:
-         ship.set_boostDir(3, false);
+         ship.set_boostDir(Ship.BOOST_LEFT, false);
          break;
        default:
          return;
