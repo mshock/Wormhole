@@ -4,6 +4,8 @@ Wormhole
 
 import processing.opengl.*;
 
+// arena
+Arena arena;
 
 // player ship
 Ship ship;
@@ -12,13 +14,19 @@ ArrayList objects = new ArrayList();
 
 void setup() {
   size(800, 800, OPENGL);
+  arena = new Arena();
   ship = new Ship("default", width/2, height/2);
 }
 
 void draw() {
   background(0);
-  ship.update();
+  
+  ship.update();  
+  
+  arena.render();
+  
   ship.display();
+  
   draw_renderables();
 }
 
