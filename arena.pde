@@ -51,4 +51,8 @@ class Arena {
   Arena() {
   }  
   
+  int arenaSquareAt() {
+    return 1;
+  }
+  
 } 

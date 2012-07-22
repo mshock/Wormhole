@@ -2,13 +2,9 @@
 class Ship extends Object {
   
    private boolean[] boostDir = new boolean[4];
-   private float ship_accel;
-   private float max_speed;
-   private float max_accel;
-   private float accel_decay;
+   private float ship_accel, max_speed, max_accel, accel_decay;
    
-   private String shiptype;
-   private String weapon;
+   private String shiptype, weapon;
    
 
    // Ship constructor by shiptype 

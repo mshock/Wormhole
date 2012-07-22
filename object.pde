@@ -1,12 +1,7 @@
 // abstract class for all objects 
 abstract class Object {
   private color c;
-  private float xpos;
-  private float ypos;
-  private float xspeed = 0;
-  private float yspeed = 0;
-  private float xaccel = 0;
-  private float yaccel = 0;  
+  private PVector pos, speed, accel;
   
   Object() {
   }
@@ -14,8 +9,10 @@ abstract class Object {
   // Object constructor, sets common values
   Object(color c, float xpos, float ypos) {
     set_color(c);
-    set_xpos(xpos);
-    set_ypos(ypos);
+    pos = new PVector(xpos, ypos);
+    speed = new PVector(0, 0);
+    accel = new PVector(0, 0);
+    
   }
   
   // display method, called by draw loop on all objects
@@ -33,7 +30,7 @@ abstract class Object {
    
    // override in subclass to customize appearance
    public void _draw_self() {
-     rect(get_xpos(),get_ypos(),10,10);
+     rect(pos.x,pos.y,10,10);
    }
    
    // accessor methods
@@ -47,51 +44,51 @@ abstract class Object {
    }
    
    public float get_xpos() {
-     return xpos;
+     return pos.x;
    }
    
    public float set_xpos(float xpos) {
-     return this.xpos = xpos;
+     return pos.x = xpos;
    }
    
    public float get_ypos() {
-     return ypos;
+     return pos.y;
    }
    
    public float set_ypos(float ypos) {
-     return this.ypos = ypos;
+     return pos.y = ypos;
    }
    
    public float get_xspeed() {
-     return xspeed;
+     return speed.x;
    }
    
    public float set_xspeed(float xspeed) {
-     return this.xspeed = xspeed;
+     return speed.x = xspeed;
    }
    
    public float get_yspeed() {
-     return yspeed;
+     return speed.y;
    }
    
    public float set_yspeed(float yspeed) {
-     return this.yspeed = yspeed;
+     return speed.y = yspeed;
    }
    
    public float get_yaccel() {
-     return yaccel;
+     return accel.y;
    }
    
    public float set_yaccel(float yaccel) {
-     return this.yaccel = yaccel;
+     return accel.y = yaccel;
    }
    
    public float get_xaccel() {
-     return xaccel;
+     return accel.x;
    }
    
    public float set_xaccel(float xaccel) {
-     return this.xaccel = xaccel;
+     return accel.x = xaccel;
    }
    
 }
