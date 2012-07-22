@@ -1,15 +1,19 @@
 // class representing user-controlled ship
 class Ship extends Object {
   
-   private boolean[] boostDir = new boolean[4];
-   private float ship_accel, max_speed, max_accel, accel_decay, orientation;
-   private int shiptype, weapon, shield;
+   private boolean boost;
+   private float ship_accel, max_speed, max_accel, accel_decay;
+   private int shiptype, weapon, shield, rot_dir;
    
-   // boost direction constants
-   static final int BOOST_UP = 0;
-   static final int BOOST_DOWN = 1;
-   static final int BOOST_RIGHT = 2;
-   static final int BOOST_LEFT = 3;
+   private float orientation = 3 * HALF_PI;
+   
+   private float max_rot = .15;
+   
+   
+   // rotate direction constants
+   static final int ROT_NONE = 0;
+   static final int ROT_CLOCKW = 1;
+   static final int ROT_CCLOCKW = 2;
    
    // weapon and ship type constants
    static final int WEAP_BULLET = 0;
@@ -50,7 +54,9 @@ class Ship extends Object {
    // update the object's physics
    // move its position one step
    public boolean update() {
-      
+     
+     _update_rotation();  
+    
      _update_accel();
      
      _drag();
@@ -89,15 +95,21 @@ class Ship extends Object {
     
     
    public void _draw_self() {
+     pushMatrix();
+     translate(get_xpos(), get_ypos());
+     rotate(get_orientation());
      // draw ship hull
      switch(get_ship_type()) {
        default:
-         triangle(get_xpos() - 8, get_ypos() + 8,
-           get_xpos(), get_ypos() - 8,
-           get_xpos() + 8, get_ypos() + 8);
+         triangle(
+           -8, 8,
+           12, 0,
+           -8, -8
+           );
          break;
      }
      
+     popMatrix();
      // draw shield
      ellipseMode(CENTER);
      stroke(59,85,255, float(get_shield()) / 100 * 255);
@@ -112,6 +124,57 @@ class Ship extends Object {
      set_ypos(get_ypos() + get_yspeed());
    }
    
+   // update the orientation of the ship
+   private void _update_rotation() {
+     float rotation; 
+     float rot_inc = 0;
+     float orientation = get_orientation();
+     
+     // TODO: set limit to max_rot and implement reasonable decay
+     if (abs(orientation + rot_inc) <= max_rot) {
+       rot_inc = orientation + rot_inc;
+     }
+     else {
+       if ( == abs(xaccel)) {
+         set_xaccel(max_accel);
+       }
+       else {
+         set_xaccel(-max_accel);
+       }
+     }
+     if (abs(yaccel + yaccel_inc) <= max_accel) {
+       set_yaccel(yaccel + yaccel_inc);
+     }
+     else {
+       if (yaccel == abs(yaccel)) {
+         set_yaccel(max_accel);
+       }
+       else {
+         set_yaccel(-max_accel);
+       }
+     }
+     
+     switch (get_rotate_dir()) {
+       case ROT_CLOCKW:
+         rotation = get_orientation() + rot_inc;
+         if (rotation >= 2 * PI) {
+           rotation -= 2 * PI;
+         }
+         break;
+       case ROT_CCLOCKW:
+         rotation = get_orientation() - rot_inc;
+         if (rotation <= -2 * PI) {
+           rotation += -2 * PI; 
+         } 
+         
+         break;
+       default:
+         rotation = get_orientation();
+         break;
+     }
+     set_orientation(rotation);
+   }
+   
    // handle button press flags by changing accels
    private void _update_accel() {
      float xaccel_inc = 0;
@@ -120,28 +183,15 @@ class Ship extends Object {
      float max_accel = get_max_accel();
      float xaccel = get_xaccel();
      float yaccel = get_yaccel();
+     float xpart = cos(get_orientation());
+     float ypart = sin(get_orientation()); 
      
-     // check keys pressed
-     if(get_boostDir(2)) {
-       xaccel_inc = ship_accel;
+     // boost in direction of orientation 
+     if(get_boost()) {
+       xaccel_inc = xpart * ship_accel;
+       yaccel_inc = ypart * ship_accel;
      }
-     else if (get_boostDir(3)) {
-       xaccel_inc = -ship_accel;  
-     }
-     if(get_boostDir(2) && get_boostDir(3)) {
-       xaccel_inc = 0;
-     }
-     if(get_boostDir(1)) {
-       yaccel_inc = ship_accel;
-     }
-     else if (get_boostDir(0)) {
-       yaccel_inc = -ship_accel;  
-     }
-     if(get_boostDir(0) && get_boostDir(1)) {
-       yaccel_inc = 0;
-     }
-     
-        
+       
      if (abs(xaccel + xaccel_inc) <= max_accel) {
        set_xaccel(xaccel + xaccel_inc);
      }
@@ -255,12 +305,22 @@ class Ship extends Object {
      return this.ship_accel = ship_accel;
    }
    
-   public boolean get_boostDir (int dir) {
-     return boostDir[dir];
+   public boolean get_boost () {
+     return boost;
    }
    
-   public boolean set_boostDir (int dir, boolean active) {
-     return boostDir[dir] = active;
+   public boolean boost (boolean active) {
+     return boost = active;
+   }
+   
+   public void set_rotate_dir (int rot_dir, boolean active) {
+     if (active) {
+       this.rot_dir = rot_dir;
+     }
+   }
+   
+   public int get_rotate_dir() {
+     return rot_dir;
    }
    
    public int set_ship_type(int shiptype) {

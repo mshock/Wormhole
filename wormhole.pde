@@ -51,18 +51,19 @@ void keyPressed() {
   }
  else if (key == CODED) {
    switch(keyCode) {
-     // directional accel
+     // rotate or boost
      case UP:
-       ship.set_boostDir(Ship.BOOST_UP, true);
+       ship.boost(true);
        break;
      case DOWN:
-       ship.set_boostDir(Ship.BOOST_DOWN, true);
+       // there is no down boost
+       //ship.set_boostDir(Ship.BOOST_DOWN, true);
        break;
      case RIGHT:
-       ship.set_boostDir(Ship.BOOST_RIGHT, true);
+       ship.set_rotate_dir(Ship.ROT_CLOCKW, true);
        break;
      case LEFT:
-       ship.set_boostDir(Ship.BOOST_LEFT, true);
+       ship.set_rotate_dir(Ship.ROT_CCLOCKW, true);
        break;
      default:
        return;
@@ -77,18 +78,18 @@ void keyReleased() {
   }
   else if (key == CODED) {
     switch(keyCode) {
-      // stop directional accel
+      // stop rotate or boost
        case UP:
-         ship.set_boostDir(Ship.BOOST_UP, false);
+         ship.boost(false);
          break;
        case DOWN:
-         ship.set_boostDir(Ship.BOOST_DOWN, false);
+         //ship.set_boostDir(Ship.BOOST_DOWN, false);
          break;
        case RIGHT:
-         ship.set_boostDir(Ship.BOOST_RIGHT, false);
+         ship.set_rotate_dir(Ship.ROT_CLOCKW, false);
          break;
        case LEFT:
-         ship.set_boostDir(Ship.BOOST_LEFT, false);
+         ship.set_rotate_dir(Ship.ROT_CCLOCKW, false);
          break;
        default:
          return;
