@@ -6,7 +6,7 @@ class Ship extends Object {
    private int shiptype, weapon, shield, rot_dir;
    
    private float orientation = 3 * HALF_PI;
-   
+   private float rotation = 0;
    private float max_rot = .15;
    
    
@@ -126,53 +126,52 @@ class Ship extends Object {
    
    // update the orientation of the ship
    private void _update_rotation() {
-     float rotation; 
-     float rot_inc = 0;
+     float rotation = get_rotation(); 
+     float rot_inc = .01;
      float orientation = get_orientation();
      
-     // TODO: set limit to max_rot and implement reasonable decay
-     if (abs(orientation + rot_inc) <= max_rot) {
-       rot_inc = orientation + rot_inc;
-     }
-     else {
-       if ( == abs(xaccel)) {
-         set_xaccel(max_accel);
-       }
-       else {
-         set_xaccel(-max_accel);
-       }
-     }
-     if (abs(yaccel + yaccel_inc) <= max_accel) {
-       set_yaccel(yaccel + yaccel_inc);
-     }
-     else {
-       if (yaccel == abs(yaccel)) {
-         set_yaccel(max_accel);
-       }
-       else {
-         set_yaccel(-max_accel);
-       }
-     }
      
+     
+     /*
+     check rotation direction
+     limit rotation rate
+     limit rotation range
+     */
      switch (get_rotate_dir()) {
        case ROT_CLOCKW:
-         rotation = get_orientation() + rot_inc;
-         if (rotation >= 2 * PI) {
-           rotation -= 2 * PI;
+         if (rotation + rot_inc >= max_rot) {
+           rotation = max_rot;
+         }
+         else {
+           rotation += rot_inc;
+         }
+         orientation = get_orientation() + rotation;
+         if (orientation >= 2 * PI) {
+           orientation -= 2 * PI;
          }
          break;
        case ROT_CCLOCKW:
-         rotation = get_orientation() - rot_inc;
-         if (rotation <= -2 * PI) {
-           rotation += -2 * PI; 
+         if (rotation - rot_inc <= -max_rot) {
+           rotation = -max_rot;
+         }
+         else {
+           rotation -= rot_inc;
+         }
+         orientation = get_orientation() + rotation;
+         if (orientation <= -2 * PI) {
+           orientation += 2 * PI; 
          } 
          
          break;
        default:
-         rotation = get_orientation();
+         // not so sure about floaty rotation...
+         // rotation *= get_accel_decay();
+         // orientation = rotation + get_orientation();
+           orientation = get_orientation();
          break;
      }
-     set_orientation(rotation);
+     set_orientation(orientation);
+     set_rotation(rotation);
    }
    
    // handle button press flags by changing accels
@@ -317,6 +316,9 @@ class Ship extends Object {
      if (active) {
        this.rot_dir = rot_dir;
      }
+     else {
+       this.rot_dir = ROT_NONE;
+     }
    }
    
    public int get_rotate_dir() {
@@ -345,6 +347,14 @@ class Ship extends Object {
    
    public float get_orientation() {
      return orientation;
+   }
+   
+   public float set_rotation(float rotation) {
+     return this.rotation = rotation;
+   }
+   
+   public float get_rotation() {
+     return rotation;
    }
    
 }
