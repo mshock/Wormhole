@@ -4,6 +4,9 @@ Wormhole
 
 import processing.opengl.*;
 
+// keyboard tracking
+Keyboard keyboard;
+
 // arena
 Arena arena;
 
@@ -16,6 +19,7 @@ void setup() {
   size(800, 800, OPENGL);
   arena = new Arena();
   ship = new Ship(Ship.SHIP_BASIC, width/2, height/2);
+  keyboard = new Keyboard();
 }
 
 void draw() {
@@ -45,6 +49,8 @@ void draw_renderables() {
 
 // handle user input
 void keyPressed() {
+  keyboard.pressKey(key);
+  
   // fire weapon
   if (key == ' ') {
     objects.add(ship.shoot());
