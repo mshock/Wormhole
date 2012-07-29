@@ -8,5 +8,8 @@
 
 
 TODO:
-	- ship orientation (for directional weapons)
-	- expand draw area offscreen
+	- expand arena offscreen and add camera windowing effect
+	- bounce mechanics for shield and ship collisions
+	- improve ship collision detection for polygonal shape
+	- add boost animation
+	- fix bullet trajectory, ship orientation not movement direction
