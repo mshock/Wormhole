@@ -260,8 +260,31 @@ class Ship extends Object {
          }
        }
        for (PVector sqr : possible_squares) {
-         if (intersect_circle_square(pos_vector, 25, sqr, Arena.GRID_UNIT_SIZE)) {
-           println("boom!");
+         switch (intersect_circle_square(pos_vector, 25, sqr, Arena.GRID_UNIT_SIZE)) {
+           case 0:
+             break;
+           case 1:
+             set_yspeed(-yspeed);
+             set_yaccel(-get_yaccel());
+             break;
+           case 2:
+             set_yspeed(-yspeed);
+             set_yaccel(-get_yaccel());
+             break;
+           case 3:
+             set_xspeed(-xspeed);
+             set_xaccel(-get_xaccel());
+             break; 
+           case 4:
+             set_xspeed(-xspeed);
+             set_xaccel(-get_xaccel());
+             break;
+           case 5:
+             set_xspeed(-xspeed);
+             set_xaccel(-get_xaccel());
+             set_yspeed(-yspeed);
+             set_yaccel(-get_yaccel());
+             break;
          }
        }
         

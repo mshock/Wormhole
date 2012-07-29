@@ -99,7 +99,16 @@ abstract class Object {
      this.pos.set(pos);
    }
    
-   public Boolean intersect_circle_square(PVector crc, int rad, PVector sqr, int len) {
+   public int intersect_circle_square(PVector crc, int rad, PVector sqr, int len) {
+     /*
+     0 - no collision
+     1 - collision top
+     2 - collision bottom
+     3 - collision left
+     4 - collision right
+     5 - collision corner
+     */
+     
       float crc_dist_x = abs(crc.x - sqr.x);
       float crc_dist_y = abs(crc.y - sqr.y);
       //println("circle: x " + crc.x + " y " + crc.y);
@@ -107,27 +116,40 @@ abstract class Object {
   
       if (crc_dist_x > (len/2 + rad)) {
         //println(1);
-        return false; 
+        return 0; 
       }
         
       if (crc_dist_y > (len/2 + rad)) { 
         //println(2);
-        return false; 
+        return 0; 
       }
   
-      if (crc_dist_x <= (len/2)) { 
+      if (crc_dist_x <= (len/2)) {
         //println(3);
-        return true; 
+        if (crc.x < sqr.x)  {
+          return 4;
+        }
+        return 3;
       } 
       if (crc_dist_y <= (len/2)) { 
         //println(4);
-        return true; 
+        if (crc.y < sqr.y) {
+          return 2;
+        }
+        return 1; 
       }
   
       float corner_dist_sqr = sq(crc_dist_x - len/2) +
                            sq(crc_dist_y - len/2);
   
-      return (corner_dist_sqr <= (sq(rad)));
+      if (corner_dist_sqr <= (sq(rad))) {
+        // println(5);
+        return 5;
+      }
+      
+      // println(6);
+      return 0;
+      
    }
    
 }
