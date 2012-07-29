@@ -1,10 +1,12 @@
 // class for keeping track of keyboard events and states
 
 class Keyboard {
+  // hash to track key events
+  // because I don't actually know how many there are or their range
   private HashMap keysPressed;
   
   Keyboard() {
-    keysPressed = new HashMap();
+    keysPressed  = new HashMap();
   }
   
   void pressKey(int pressed) {
@@ -16,6 +18,7 @@ class Keyboard {
   }
   
   Boolean isPressed(int button) {
+    // avoid NullPointer by first checking existence
     if (! keysPressed.containsKey(button)) {
       return false;
     }

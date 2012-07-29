@@ -49,65 +49,73 @@ void draw_renderables() {
 
 // handle user input
 void keyPressed() {
-  keyboard.pressKey(key);
-  
-  // fire weapon
-  if ( key == ' ' ) {
-    objects.add(ship.shoot());
-  }
- else if (key == CODED) {
-   switch(keyCode) {
-     // rotate or boost
-     case UP:
-       ship.boost(true);
+ keyboard.pressKey(keyCode);
+
+ switch(keyCode) {
+   // fire weapon
+   case KeyEvent.VK_SPACE:
+     objects.add(ship.shoot());
+     break;
+   // rotate or boost
+   case UP:
+     ship.boost(true);
+     break;
+   case DOWN:
+     // there is no down boost
+     // add extra shield charge or something
+     //ship.set_boostDir(Ship.BOOST_DOWN, true);
+     break;
+   case RIGHT:
+     // can't turn both right and left at the same time
+     if (keyboard.isPressed(LEFT)) {
+       ship.set_rotate_dir(Ship.ROT_NONE, true);
        break;
-     case DOWN:
-       // there is no down boost
-       // add extra shield charge or something
-       //ship.set_boostDir(Ship.BOOST_DOWN, true);
+     }
+     ship.set_rotate_dir(Ship.ROT_CLOCKW, true);
+     break;
+   case LEFT:
+     if (keyboard.isPressed(RIGHT)) {
+       ship.set_rotate_dir(Ship.ROT_NONE, true);
        break;
-     case RIGHT:
-       // can't turn both right and left at the same time
-       if (keyboard.isPressed(KeyEvent.VK_LEFT)) {
-         break;
-       }
-       ship.set_rotate_dir(Ship.ROT_CLOCKW, true);
-       break;
-     case LEFT:
-       if (keyboard.isPressed(KeyEvent.VK_RIGHT)) {
-         break;
-       }
-       ship.set_rotate_dir(Ship.ROT_CCLOCKW, true);
-       break;
-     default:
-       return;
-   }
- } 
+     }
+     ship.set_rotate_dir(Ship.ROT_CCLOCKW, true);
+     break;
+   default:
+     return;
+ }
 }
 
 void keyReleased() {
-  keyboard.releaseKey(key);
-  // unfire weapon
-  if (key == ' ') {
-    ship.unshoot();
+  keyboard.releaseKey(keyCode);
+  
+  switch(keyCode) {
+    case KeyEvent.VK_SPACE:
+      ship.unshoot();
+      break;
+    // stop rotate or boost
+     case UP:
+       ship.boost(false);
+       break;
+     case DOWN:
+       //ship.set_boostDir(Ship.BOOST_DOWN, false);
+       break;
+     case RIGHT:
+       // if both were pressed, resume rotating in the other direction
+       if (keyboard.isPressed(LEFT)) {
+         ship.set_rotate_dir(Ship.ROT_CCLOCKW, true);
+         break;
+       }
+       ship.set_rotate_dir(Ship.ROT_CLOCKW, false);
+       break;
+     case LEFT:
+       if (keyboard.isPressed(RIGHT)) {
+         ship.set_rotate_dir(Ship.ROT_CLOCKW, true);
+         break;
+       }
+       ship.set_rotate_dir(Ship.ROT_CCLOCKW, false);
+       break;
+     default:
+       return;
   }
-  else if (key == CODED) {
-    switch(keyCode) {
-      // stop rotate or boost
-       case UP:
-         ship.boost(false);
-         break;
-       case DOWN:
-         //ship.set_boostDir(Ship.BOOST_DOWN, false);
-         break;
-       case RIGHT:
-         ship.set_rotate_dir(Ship.ROT_CLOCKW, false);
-         break;
-       case LEFT:
-         ship.set_rotate_dir(Ship.ROT_CCLOCKW, false);
-         break;
-       default:
-         return;
-    }
-  }
+
 }
