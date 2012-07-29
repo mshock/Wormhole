@@ -1,23 +1,25 @@
 // class for keeping track of keyboard events and states
 
 class Keyboard {
-  private HashMap keysHeld;
+  private HashMap keysPressed;
   
   Keyboard() {
     keysPressed = new HashMap();
   }
   
   void pressKey(int pressed) {
-    if (keysHeld
-    keysHeld.put(
+    keysPressed.put(pressed, true);
   }
   
   void releaseKey(int released) {
-    
+    keysPressed.put(released, false);
   }
   
-  boolean isPressed(int button) {
-    
+  Boolean isPressed(int button) {
+    if (! keysPressed.containsKey(button)) {
+      return false;
+    }
+    return (Boolean) keysPressed.get(button);
   }
   
 }

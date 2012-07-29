@@ -52,7 +52,7 @@ void keyPressed() {
   keyboard.pressKey(key);
   
   // fire weapon
-  if (key == ' ') {
+  if ( key == ' ' ) {
     objects.add(ship.shoot());
   }
  else if (key == CODED) {
@@ -63,12 +63,20 @@ void keyPressed() {
        break;
      case DOWN:
        // there is no down boost
+       // add extra shield charge or something
        //ship.set_boostDir(Ship.BOOST_DOWN, true);
        break;
      case RIGHT:
+       // can't turn both right and left at the same time
+       if (keyboard.isPressed(KeyEvent.VK_LEFT)) {
+         break;
+       }
        ship.set_rotate_dir(Ship.ROT_CLOCKW, true);
        break;
      case LEFT:
+       if (keyboard.isPressed(KeyEvent.VK_RIGHT)) {
+         break;
+       }
        ship.set_rotate_dir(Ship.ROT_CCLOCKW, true);
        break;
      default:
@@ -78,6 +86,7 @@ void keyPressed() {
 }
 
 void keyReleased() {
+  keyboard.releaseKey(key);
   // unfire weapon
   if (key == ' ') {
     ship.unshoot();
