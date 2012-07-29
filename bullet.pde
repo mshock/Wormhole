@@ -26,6 +26,8 @@ class Bullet extends Projectile {
   }
   
    public void _draw_self() {
+     noStroke();
+     fill(get_color());
      ellipse(get_xpos(),get_ypos(),7,7);
    }
   

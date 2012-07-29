@@ -5,6 +5,7 @@ class Ship extends Object {
    private float ship_accel, max_speed, max_accel, accel_decay;
    private int shiptype, weapon, shield, rot_dir;
    
+   // initialize the ship pointing north
    private float orientation = 3 * HALF_PI;
    private float rotation = 0;
    private float max_rot = .15;
@@ -110,10 +111,11 @@ class Ship extends Object {
      }
      
      popMatrix();
+     
      // draw shield
      ellipseMode(CENTER);
      stroke(59,85,255, float(get_shield()) / 100 * 255);
-     fill(0,0,0,0);
+     noFill();
      ellipse(get_xpos(), get_ypos(), 50, 50);
      
    }
@@ -167,6 +169,7 @@ class Ship extends Object {
          // not so sure about floaty rotation...
          // rotation *= get_accel_decay();
          // orientation = rotation + get_orientation();
+           rotation = 0;
            orientation = get_orientation();
          break;
      }
