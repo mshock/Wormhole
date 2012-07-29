@@ -91,4 +91,43 @@ abstract class Object {
      return accel.x = xaccel;
    }
    
+   public PVector get_pos_vect() {
+     return pos.get();
+   }
+   
+   public void set_pos_vect(PVector pos) {
+     this.pos.set(pos);
+   }
+   
+   public Boolean intersect_circle_square(PVector crc, int rad, PVector sqr, int len) {
+      float crc_dist_x = abs(crc.x - sqr.x);
+      float crc_dist_y = abs(crc.y - sqr.y);
+      //println("circle: x " + crc.x + " y " + crc.y);
+      //println("square: x " + sqr.x + " x " + sqr.x);
+  
+      if (crc_dist_x > (len/2 + rad)) {
+        //println(1);
+        return false; 
+      }
+        
+      if (crc_dist_y > (len/2 + rad)) { 
+        //println(2);
+        return false; 
+      }
+  
+      if (crc_dist_x <= (len/2)) { 
+        //println(3);
+        return true; 
+      } 
+      if (crc_dist_y <= (len/2)) { 
+        //println(4);
+        return true; 
+      }
+  
+      float corner_dist_sqr = sq(crc_dist_x - len/2) +
+                           sq(crc_dist_y - len/2);
+  
+      return (corner_dist_sqr <= (sq(rad)));
+   }
+   
 }

@@ -38,7 +38,7 @@ class Arena {
                         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                       
                         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},               
+                        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},               
                         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                 
                         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -58,7 +58,7 @@ class Arena {
     reset_arena();
   }  
   
-  int arenaSquareAt(PVector target) {
+  int arena_square_at(PVector target) {
     float grid_spot_x = target.x / GRID_UNIT_SIZE;
     float grid_spot_y = target.y / GRID_UNIT_SIZE;
     
@@ -68,6 +68,13 @@ class Arena {
     }  
     
     return arena_grid[int(grid_spot_y)][int(grid_spot_x)];
+  }
+  
+  PVector get_square_center(PVector target) {
+    int grid_x = int( floor(target.x / GRID_UNIT_SIZE) * GRID_UNIT_SIZE + (GRID_UNIT_SIZE / 2));
+    int grid_y = int( floor(target.y / GRID_UNIT_SIZE) * GRID_UNIT_SIZE + (GRID_UNIT_SIZE / 2));
+    
+    return new PVector(grid_x, grid_y);
   }
   
   // reset the arena to the start grid

@@ -34,7 +34,7 @@ class Ship extends Object {
          set_max_accel(2);
          set_accel_decay(.85);
          set_weapon(WEAP_BULLET);
-         set_shield(95);
+         set_shield(100);
          break;
      }
 
@@ -170,7 +170,6 @@ class Ship extends Object {
          // rotation *= get_accel_decay();
          // orientation = rotation + get_orientation();
            rotation = 0;
-           orientation = get_orientation();
          break;
      }
      set_orientation(orientation);
@@ -245,14 +244,38 @@ class Ship extends Object {
      float ypos = get_ypos();
      float xspeed  = get_xspeed();
      float yspeed = get_yspeed();
+     PVector pos_vector = get_pos_vect();
      
-     if ((xpos + xspeed >= width) || (xpos + xspeed <= 0)) {
-       set_xspeed(-xspeed);
-       set_xaccel( -get_xaccel() );
+     ArrayList <PVector> possible_squares = new ArrayList();
+     
+     // bound shielded ship
+     if (get_shield() > 0) {
+       // get all nearby solid arena squares, check intersection
+       for (int y = -25; y <= 25; y+=Arena.GRID_UNIT_SIZE/2) {
+         for (int x = -25; x <= 25; x+=Arena.GRID_UNIT_SIZE/2) {
+           PVector testing = new PVector(x + xpos,y + ypos);
+           if(arena.arena_square_at(testing) == Arena.TILE_WALL) {
+             possible_squares.add(arena.get_square_center(testing));
+           }
+         }
+       }
+       for (PVector sqr : possible_squares) {
+         if (intersect_circle_square(pos_vector, 25, sqr, Arena.GRID_UNIT_SIZE)) {
+           println("boom!");
+         }
+       }
+        
      }
-     if ((ypos + yspeed >= height) || (ypos + yspeed <= 0)) {
-       set_yspeed(-yspeed) ;
-       set_yaccel( -get_yaccel() );
+     // bound unshielded ship
+     else {
+       if ((xpos + xspeed >= width) || (xpos + xspeed <= 0)) {
+         set_xspeed(-xspeed);
+         set_xaccel( -get_xaccel() );
+       }
+       if ((ypos + yspeed >= height) || (ypos + yspeed <= 0)) {
+         set_yspeed(-yspeed) ;
+         set_yaccel( -get_yaccel() );
+       }
      }
    }
    
